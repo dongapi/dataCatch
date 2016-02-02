@@ -80,7 +80,7 @@ public class DataCatchExcuter {
 	private static void spider_yzwf(String djh,String qylx){
 		Spider.create(new GSspider_jx_yzwf())
 		//yzwfxxAction_init.action
-		.addUrl("yzwfxxAction_init.action")
+		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/yzwfxxAction_init.action")
 		.run();
 	}
 	/**
@@ -123,12 +123,13 @@ public class DataCatchExcuter {
 		final String djh = "3600006000042031";
 		String qylx = "1219";
 		
+		
 		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
 		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				spider_jbxx(djh, "1219");
 			}
-		}, 0, 12, TimeUnit.HOURS);
+		}, 0, 1, TimeUnit.HOURS);
 		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				spider_jyyc("3600006000042031", "1219");
@@ -149,8 +150,6 @@ public class DataCatchExcuter {
 				spider_cccj("3600006000042031", "1219");
 			}
 		}, 0, 1, TimeUnit.HOURS);
-		
-		System.out.println("完事");
 	}
 
 }

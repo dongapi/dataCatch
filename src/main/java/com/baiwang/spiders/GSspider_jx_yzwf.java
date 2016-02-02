@@ -35,7 +35,7 @@ public class GSspider_jx_yzwf implements PageProcessor {
 	  */
 	public void process(Page page) {
 		List<String> result = page.getHtml().xpath("//td/text()").all();
-		System.out.println(result.toString());
+		System.out.println(this.getClass().getName()+":  "+result.toString());
 		Connection connect = null;
 		PreparedStatement preStat = null;
 		String sql = null;
@@ -50,6 +50,7 @@ public class GSspider_jx_yzwf implements PageProcessor {
 			preStat.setString(4, result.get(3));
 			preStat.setString(5, "2");
 			preStat.setString(6, result.get(5));
+			System.out.println(preStat.toString());
 //			if(preStat != null) preStat.executeUpdate();
 		} catch (SQLException e1) {
 			e1.printStackTrace();

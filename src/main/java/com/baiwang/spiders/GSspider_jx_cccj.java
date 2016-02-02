@@ -35,7 +35,7 @@ public class GSspider_jx_cccj implements PageProcessor {
 	  */
 	public void process(Page page) {
 		List<String> result = page.getHtml().xpath("//td/text()").all();
-		System.out.println(result.toString());
+		System.out.println(this.getClass().getName()+":  "+result.toString());
 		Connection connect = null;
 		PreparedStatement preStat = null;
 		String sql = null;
