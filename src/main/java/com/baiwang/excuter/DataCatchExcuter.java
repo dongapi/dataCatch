@@ -4,15 +4,18 @@
 
 package com.baiwang.excuter;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.baiwang.spiders.GSspider_jx_cccj;
 import com.baiwang.spiders.GSspider_jx_jcxx;
 import com.baiwang.spiders.GSspider_jx_jyyc;
 import com.baiwang.spiders.GSspider_jx_xzcf;
 import com.baiwang.spiders.GSspider_jx_yzwf;
+import com.baiwang.spiders.util.HttpUtil;
 
 import us.codecraft.webmagic.Spider;
 
@@ -98,6 +101,61 @@ public class DataCatchExcuter {
 		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/ccjcxxAction_init.action?nbxh="+djh)
 		.run();
 	}
+	
+	private static String[] queryCom(String arg){
+		String[] rest = new String[2];
+		try {
+			String url = "http://gsxt.jxaic.gov.cn/ECPS/qyxxgsAction_queryXyxx.action?flag=1&selectValue="+URLEncoder.encode(arg, "gb2312") ;
+			String resulthtml = HttpUtil.getOnePage(url);
+			int start = resulthtml.indexOf("onclick=\"showJbxx(");
+			if(start>0){
+				int end = start + resulthtml.substring(start).indexOf(")");
+				String preResult = resulthtml.substring(start, end);
+				System.out.println("----------------"+preResult);
+				String num = preResult.substring(preResult.indexOf("'")+1, preResult.indexOf("','"));
+				String qylx = preResult.substring(preResult.indexOf("','")+3,preResult.indexOf("','", preResult.indexOf("','")+1));
+				System.out.println("num:"+num+" ; qylx:"+qylx);
+				rest[0] = num;
+				rest[1] = qylx;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return rest;
+	}
+	
+	public static void catchData(String name){
+		String[] re = queryCom(name);
+		final String nbxh = re[0];
+		final String qylx = re[1];
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		executorService.execute(new Runnable() {
+			public void run() {
+				spider_jbxx(nbxh, qylx);
+			}
+		});
+		executorService.execute(new Runnable() {
+			public void run() {
+				spider_jyyc(nbxh, qylx);
+			}
+		});
+		executorService.execute(new Runnable() {
+			public void run() {
+				spider_xzcf(nbxh, qylx);
+			}
+		});
+		executorService.execute(new Runnable() {
+			public void run() {
+				spider_yzwf(nbxh, qylx);
+			}
+		});
+		executorService.execute(new Runnable() {
+			public void run() {
+				spider_cccj(nbxh, qylx);
+			}
+		});
+	}
 
 	/**
 	  * @author Administrator
@@ -108,48 +166,8 @@ public class DataCatchExcuter {
 	  * @date 2016年1月29日 下午2:22:48
 	  */
 	public static void main(String[] args) {
-//		spider_jbxx("3600006000042031", "1219");
-//		System.out.println("完事");
-//		List<NameValuePair> list = new ArrayList<>();
-//		NameValuePair nvp = new BasicNameValuePair("selectValue", "360803310002382");
-//		list.add(nvp);
-//		try {
-//			String a = HttpUtil.postOnePage("http://gsxt.jxaic.gov.cn/ECPS/qyxxgsAction_queryXyxx.action", list);
-//			System.out.println("下载页面："+a);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		
-		final String djh = "3600006000042031";
-		String qylx = "1219";
-		
-		
-		ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
-		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				spider_jbxx(djh, "1219");
-			}
-		}, 0, 1, TimeUnit.HOURS);
-		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				spider_jyyc("3600006000042031", "1219");
-			}
-		}, 0, 1, TimeUnit.HOURS);
-		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				spider_xzcf("3600006000042031", "1219");
-			}
-		}, 0, 1, TimeUnit.HOURS);
-		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				spider_yzwf("3600006000042031", "1219");
-			}
-		}, 0, 1, TimeUnit.HOURS);
-		scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
-			public void run() {
-				spider_cccj("3600006000042031", "1219");
-			}
-		}, 0, 1, TimeUnit.HOURS);
+		catchData("联创光电");
+		 
 	}
-
 }

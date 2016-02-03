@@ -24,7 +24,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
   */
 public class GSspider_jx_jyyc implements PageProcessor {
 
-	Site site = Site.me().setRetryTimes(3).setSleepTime(1).setCharset("utf-8");
+	Site site = Site.me().setRetryTimes(3).setSleepTime(1).setCharset("gb2312");
 	private static final ResourceBundle bundle = java.util.ResourceBundle.getBundle("jdbc");
 	/**
 	  * @author Administrator
