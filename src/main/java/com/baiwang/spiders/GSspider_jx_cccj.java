@@ -24,8 +24,15 @@ import us.codecraft.webmagic.processor.PageProcessor;
   */
 public class GSspider_jx_cccj implements PageProcessor {
 
-	Site site = Site.me().setRetryTimes(3).setSleepTime(1).setCharset("utf-8");
+	Site site = Site.me().setRetryTimes(3).setSleepTime(1).setCharset("gb2312");
 	private static final ResourceBundle bundle = java.util.ResourceBundle.getBundle("jdbc");
+	private Long qyId;
+	
+	public void setQyId(Long qyId) {
+	
+		this.qyId = qyId;
+	}
+
 	/**
 	  * @author Administrator
 	  * @Description: 定义抓取规则
@@ -42,13 +49,13 @@ public class GSspider_jx_cccj implements PageProcessor {
 		try {
 			connect = DriverManager.getConnection(bundle.getString("jdbc.url"),bundle.getString("jdbc.username"),bundle.getString("jdbc.password"));
 		
-			sql = "insert into pub_gs_ccjc(jclx,jcrq,jcjg,gsmc) values(?,?,?,?)";
+			sql = "insert into pub_gs_ccjc(jclx,jcrq,jcjg,qyid) values(?,?,?,?)";
 			preStat = connect.prepareStatement(sql);
-			preStat.setString(1, result.get(0));
-			preStat.setString(2, result.get(1));
-			preStat.setString(3, result.get(2));
-			preStat.setString(4, result.get(3));
-//			if(preStat != null) preStat.executeUpdate();
+			preStat.setString(1, result.get(2));
+			preStat.setString(2, result.get(3));
+			preStat.setString(3, result.get(4));
+			preStat.setLong(4, this.qyId);
+			if(preStat != null) preStat.executeUpdate();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}finally {
