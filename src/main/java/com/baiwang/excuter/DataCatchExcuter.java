@@ -5,7 +5,6 @@
 package com.baiwang.excuter;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +40,7 @@ public class DataCatchExcuter {
 		Spider.create(jcxx)
 		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/qyxxgsAction_initQyjbqk.action?nbxh="+djh+"&qylx="+qylx)
 		.run();
-		System.out.println("----id----"+jcxx.getQyId());
+//		System.out.println("----id----"+jcxx.getQyId());
 		return jcxx.getQyId();
 	}
 	/**
@@ -122,10 +121,10 @@ public class DataCatchExcuter {
 			if(start>0){
 				int end = start + resulthtml.substring(start).indexOf(")");
 				String preResult = resulthtml.substring(start, end);
-				System.out.println("----------------"+preResult);
+//				System.out.println("----------------"+preResult);
 				String num = preResult.substring(preResult.indexOf("'")+1, preResult.indexOf("','"));
 				String qylx = preResult.substring(preResult.indexOf("','")+3,preResult.indexOf("','", preResult.indexOf("','")+1));
-				System.out.println("num:"+num+" ; qylx:"+qylx);
+//				System.out.println("num:"+num+" ; qylx:"+qylx);
 				rest[0] = num;
 				rest[1] = qylx;
 			}
@@ -135,6 +134,14 @@ public class DataCatchExcuter {
 		return rest;
 	}
 	
+	/**
+	  * @author ldm
+	  * @Description: 抓取企业工商类信息
+	  * @param @param name:企业名称 或 统一社会信用代码或注册号  
+	  * @return void  
+	  * @throws
+	  * @date 2016年2月4日 上午11:59:22
+	  */
 	public static void catchData(String name){
 		String[] re = queryCom(name);
 		final String nbxh = re[0];
@@ -170,10 +177,11 @@ public class DataCatchExcuter {
 	  * @return void  
 	  * @throws
 	  * @date 2016年1月29日 下午2:22:48
-	  */
+	 */
 	public static void main(String[] args) {
 		
-		catchData("AAA");
+		catchData("联创光");
 		 
 	}
+	 
 }

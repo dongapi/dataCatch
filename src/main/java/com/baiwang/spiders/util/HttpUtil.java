@@ -27,12 +27,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * @author wsdoing
  * @date 2016年1月28日 上午9:58:17
  */
+@SuppressWarnings("deprecation")
 public class HttpUtil {
 
 	private static final String filePath = "pics";
 
 	public static String getCaptcha(String url) throws IOException {
 
+		@SuppressWarnings({ "resource" })
 		HttpClient hc = new DefaultHttpClient();
 		HttpGet hg = new HttpGet(url);
 	    Calendar cd = Calendar.getInstance();  
@@ -62,6 +64,7 @@ public class HttpUtil {
 
 	public static String getOnePage(String url) throws IOException {
 
+		@SuppressWarnings("resource")
 		HttpClient hc = new DefaultHttpClient();
 		HttpGet hg = new HttpGet(url);
 		HttpResponse response = hc.execute(hg);
@@ -78,6 +81,7 @@ public class HttpUtil {
 
 	public static String postOnePage(String url, List<NameValuePair> params) throws IOException {
 
+		@SuppressWarnings({ "resource" })
 		HttpClient hc = new DefaultHttpClient();
 		HttpPost hp = new HttpPost(url);
 		hp.setHeader("User-Agent",
