@@ -9,25 +9,29 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.baiwang.spiders.GSspider_jx_cccj;
-import com.baiwang.spiders.GSspider_jx_jcxx;
-import com.baiwang.spiders.GSspider_jx_jyyc;
-import com.baiwang.spiders.GSspider_jx_xzcf;
-import com.baiwang.spiders.GSspider_jx_yzwf;
+import org.apache.log4j.Logger;
+
+import com.baiwang.spiders.GSspider_bj_cccj;
+import com.baiwang.spiders.GSspider_bj_jcxx;
+import com.baiwang.spiders.GSspider_bj_jyyc;
+import com.baiwang.spiders.GSspider_bj_xzcf;
+import com.baiwang.spiders.GSspider_bj_yzwf;
 import com.baiwang.spiders.util.HttpUtil;
 
 import us.codecraft.webmagic.Spider;
 
 /**
   * @ClassName: DataCatchExcuter
-  * @Description: TODO
+  * @Description: 北京企业信息抓取工具类
   * @author Administrator
   * @date 2016年1月29日 下午2:22:48
   */
-public class DataCatchExcuter {
+public class DataCatchExcuter_bj {
+	
+//	private static final Logger logger = Logger.getLogger(DataCatchExcuter_bj.class);
 	
 	/**
-	  * @author Administrator
+	  * @author ldm
 	  * @Description: 企业基本信息（工商类抓取）
 	  * @param @param djh 企业登记号
 	  * @param @param qylx 企业类型	
@@ -35,96 +39,103 @@ public class DataCatchExcuter {
 	  * @throws
 	  * @date 2016年1月28日 下午5:06:50
 	  */
-	private static Long spider_jbxx(String djh,String qylx){
-		GSspider_jx_jcxx jcxx = new GSspider_jx_jcxx();
+	private static Long spider_jbxx(String entId,String credit_ticket){
+		GSspider_bj_jcxx jcxx = new GSspider_bj_jcxx();
 		Spider.create(jcxx)
-		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/qyxxgsAction_initQyjbqk.action?nbxh="+djh+"&qylx="+qylx)
+		//http://qyxy.baic.gov.cn/gjjbj/gjjQueryCreditAction!openEntInfo.dhtml?entId=20e38b8b4d194cc8014d1e12e97f6374&credit_ticket=8173D03BDAA53D4E34282E704327D289
+		.addUrl("http://qyxy.baic.gov.cn/gjjbj/gjjQueryCreditAction!openEntInfo.dhtml?entId="+entId+"&credit_ticket="+credit_ticket)
 		.run();
-//		System.out.println("----id----"+jcxx.getQyId());
 		return jcxx.getQyId();
 	}
 	/**
-	  * @author Administrator
+	  * @author ldm
 	  * @Description: 经营异常
-	  * @param @param djh
-	  * @param @param qylx  
+	  * @param @param djh 登记号
+	  * @param @param qylx 企业类型
 	  * @return void  
 	  * @throws
 	  * @date 2016年1月29日 下午5:36:42
 	  */
 	private static void spider_jyyc(String djh,String qylx,Long qyId){
-		GSspider_jx_jyyc jyyc = new GSspider_jx_jyyc();
+		GSspider_bj_jyyc jyyc = new GSspider_bj_jyyc();
 		jyyc.setQyId(qyId);
 		Spider.create(jyyc)
-		//jyycxxAction_init.action?nbxh=3600006000042031
-		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/jyycxxAction_init.action?nbxh="+djh)
+		//http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_jyycxx.dhtml?entId=20e38b8b4d194cc8014d1e12e97f6374&clear=true
+		.addUrl("http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_jyycxx.dhtml?entId="+djh+"&clear=true")
 		.run();
 	}
 	/**
 	  * @author Administrator
 	  * @Description: 行政处罚
-	  * @param @param djh
-	  * @param @param qylx  
+	  * @param @param djh 登记号
+	  * @param @param qylx  企业类型
 	  * @return void  
 	  * @throws
 	  * @date 2016年1月29日 下午5:36:42
 	  */
 	private static void spider_xzcf(String djh,String qylx,Long qyId){
-		GSspider_jx_xzcf xzcf = new GSspider_jx_xzcf();
+		GSspider_bj_xzcf xzcf = new GSspider_bj_xzcf();
 		xzcf.setQyId(qyId);
 		Spider.create(xzcf)
-		//xzcfxxAction_initXzcfxx.action?nbxh=3600006000042031
-		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/xzcfxxAction_initXzcfxx.action?nbxh="+djh)
+		//http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list.dhtml?entId=20e38b8b4d194cc8014d1e12e97f6374&clear=true
+		.addUrl("http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list.dhtml?entId="+djh+"&clear=true")
 		.run();
 	}
 	/**
 	  * @author Administrator
 	  * @Description: 严重违法
-	  * @param @param djh
-	  * @param @param qylx  
+	  * @param @param djh 登记号
+	  * @param @param qylx  企业类型
 	  * @return void  
 	  * @throws
 	  * @date 2016年1月29日 下午5:36:42
 	  */
 	private static void spider_yzwf(String djh,String qylx,Long qyId){
-		GSspider_jx_yzwf yzwf = new GSspider_jx_yzwf();
+		GSspider_bj_yzwf yzwf = new GSspider_bj_yzwf();
 		yzwf.setQyId(qyId);
 		Spider.create(yzwf)
-		//yzwfxxAction_init.action
-		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/yzwfxxAction_init.action")
+		//http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_yzwfxx.dhtml?ent_id=20e38b8b4d194cc8014d1e12e97f6374&clear=true
+		.addUrl("http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_yzwfxx.dhtml?ent_id="+djh+"&clear=true")
 		.run();
 	}
 	/**
 	  * @author Administrator
 	  * @Description: 抽查抽检
-	  * @param @param djh
-	  * @param @param qylx  
+	  * @param @param djh 登记号
+	  * @param @param qylx  企业类型
 	  * @return void  
 	  * @throws
 	  * @date 2016年1月29日 下午5:36:42
 	  */
 	private static void spider_cccj(String djh,String qylx,Long qyId){
-		GSspider_jx_cccj cccj = new GSspider_jx_cccj();
+		GSspider_bj_cccj cccj = new GSspider_bj_cccj();
 		cccj.setQyId(qyId);
 		Spider.create(cccj)
-		//ccjcxxAction_init.action?nbxh=3600006000042031
-		.addUrl("http://gsxt.jxaic.gov.cn/ECPS/ccjcxxAction_init.action?nbxh="+djh)
+		//http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_ccjcxx.dhtml?ent_id=20e38b8b4d194cc8014d1e12e97f6374&clear=true
+		.addUrl("http://qyxy.baic.gov.cn/gsgs/gsxzcfAction!list_ccjcxx.dhtml?ent_id="+djh+"&clear=true")
 		.run();
 	}
 	
+	/**
+	  * @author ldm
+	  * @Description: 根据关键字arg执行查询操作 在返回的页面中抽取entId和credit_ticket的值 为获取企业信息的请求提供必要参数。
+	  * @param @param arg
+	  * @param @return  
+	  * @return String[] --- String[0]为entId ,String[1]为credit_ticket
+	  * @throws
+	  * @date 2016年2月15日 上午9:55:08
+	  */
 	private static String[] queryCom(String arg){
 		String[] rest = new String[2];
 		try {
 			String url = "http://gsxt.jxaic.gov.cn/ECPS/qyxxgsAction_queryXyxx.action?flag=1&selectValue="+URLEncoder.encode(arg, "gb2312") ;
 			String resulthtml = HttpUtil.getOnePage(url);
-			int start = resulthtml.indexOf("onclick=\"showJbxx(");
+			int start = resulthtml.indexOf("onclick=\"openEntInfo(");
 			if(start>0){
 				int end = start + resulthtml.substring(start).indexOf(")");
 				String preResult = resulthtml.substring(start, end);
-//				System.out.println("----------------"+preResult);
 				String num = preResult.substring(preResult.indexOf("'")+1, preResult.indexOf("','"));
 				String qylx = preResult.substring(preResult.indexOf("','")+3,preResult.indexOf("','", preResult.indexOf("','")+1));
-//				System.out.println("num:"+num+" ; qylx:"+qylx);
 				rest[0] = num;
 				rest[1] = qylx;
 			}
@@ -144,9 +155,12 @@ public class DataCatchExcuter {
 	  */
 	public static void catchData(String name){
 		String[] re = queryCom(name);
-		final String nbxh = re[0];
-		final String qylx = re[1];
+//		final String nbxh = re[0];
+//		final String qylx = re[1];
+		final String nbxh = "20e38b8b4d194cc8014d1e12e97f6374";
+		final String qylx = "8173D03BDAA53D4E34282E704327D289";
 		final Long qyId = spider_jbxx(nbxh, qylx);
+		System.out.println(qyId);
 		ExecutorService executorService = Executors.newFixedThreadPool(4);
 		executorService.execute(new Runnable() {
 			public void run() {
@@ -180,7 +194,7 @@ public class DataCatchExcuter {
 	 */
 	public static void main(String[] args) {
 		
-		catchData("联创光");
+		catchData("百望股份");
 		 
 	}
 	 
